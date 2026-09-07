@@ -10,10 +10,12 @@ BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "students.db"
 
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH.as_posix()}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    if config:
+        app.config.update(config)
 
     CORS(app, origins=["http://localhost:5173"])
     init_db(app)
