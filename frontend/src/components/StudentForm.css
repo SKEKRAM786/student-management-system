@@ -1,0 +1,72 @@
+.student-form {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 520px;
+  padding: 8px 0 24px;
+  text-align: left;
+}
+
+.student-form h2 {
+  margin: 0 0 20px;
+}
+
+.student-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.student-form input,
+.student-form select,
+.student-form button {
+  font: inherit;
+  color: var(--text-h);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.student-form input,
+.student-form select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.student-form input[aria-invalid="true"],
+.student-form select[aria-invalid="true"] {
+  border-color: #c2410c;
+}
+
+.student-form button {
+  cursor: pointer;
+}
+
+.student-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.student-form__error,
+.student-form__form-error {
+  color: #c2410c;
+  font-size: 13px;
+}
+
+.student-form__form-error {
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 1px solid #c2410c;
+  border-radius: 8px;
+  background: rgba(194, 65, 12, 0.08);
+}
+
+.student-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
