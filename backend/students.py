@@ -1,3 +1,4 @@
+import math
 import re
 from datetime import date
 
@@ -10,6 +11,8 @@ from models import EMAIL_PATTERN, VALID_ENROLLMENT_STATUSES, Student
 students_bp = Blueprint("students", __name__)
 
 DATE_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+DEFAULT_PAGE = 1
+DEFAULT_PAGE_SIZE = 10
 
 
 def json_error(field, message, status=400):
@@ -21,6 +24,71 @@ def _require_non_empty_string(data, field):
     if not isinstance(value, str) or not value.strip():
         return None, json_error(field, f"{field} is required and cannot be empty")
     return value.strip(), None
+
+
+def _parse_positive_int(raw, field):
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        return None, json_error(field, f"{field} must be a positive integer")
+    if value < 1:
+        return None, json_error(field, f"{field} must be a positive integer")
+    return value, None
+
+
+@students_bp.route("/students", methods=["GET"])
+def list_students():
+    page_raw = request.args.get("page")
+    if page_raw is None:
+        page = DEFAULT_PAGE
+    else:
+        page, error = _parse_positive_int(page_raw, "page")
+        if error:
+            return error
+
+    if "page_size" in request.args:
+        page_size, error = _parse_positive_int(request.args.get("page_size"), "page_size")
+        if error:
+            return error
+    elif "limit" in request.args:
+        page_size, error = _parse_positive_int(request.args.get("limit"), "limit")
+        if error:
+            return error
+    else:
+        page_size = DEFAULT_PAGE_SIZE
+
+    status = request.args.get("status")
+    if status is not None:
+        if status not in VALID_ENROLLMENT_STATUSES:
+            return json_error(
+                "status",
+                'status must be one of: "active", "graduated", "dropped"',
+            )
+
+    query = Student.query
+    if status is not None:
+        query = query.filter_by(enrollment_status=status)
+
+    total = query.count()
+    total_pages = math.ceil(total / page_size) if total else 0
+    students = (
+        query.order_by(Student.created_at.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+        .all()
+    )
+
+    return jsonify(
+        {
+            "data": [student.to_dict() for student in students],
+            "pagination": {
+                "total": total,
+                "page": page,
+                "page_size": page_size,
+                "total_pages": total_pages,
+            },
+        }
+    ), 200
 
 
 @students_bp.route("/students", methods=["POST"])
