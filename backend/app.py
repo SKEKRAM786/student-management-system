@@ -15,9 +15,9 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH.as_posix()}"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    CORS(app)
+    CORS(app, origins=["http://localhost:5173"])
     init_db(app)
-    app.register_blueprint(students_bp, url_prefix="/api/students")
+    app.register_blueprint(students_bp)
 
     return app
 
