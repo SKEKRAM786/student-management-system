@@ -134,7 +134,10 @@ export default function StudentForm({ initialData, onSubmit, onCancel }) {
 
   return (
     <form className="student-form" onSubmit={handleSubmit} noValidate>
-      <h2>{isEdit ? "Edit student" : "Add student"}</h2>
+      <h2 id="student-form-title">{isEdit ? "Edit student" : "Add student"}</h2>
+      <p className="student-form__subtitle">
+        {isEdit ? "Update this student's record." : "Enter the student's details below."}
+      </p>
 
       {formError && (
         <p className="student-form__form-error" role="alert">
@@ -142,39 +145,41 @@ export default function StudentForm({ initialData, onSubmit, onCancel }) {
         </p>
       )}
 
-      <label className="student-form__field">
-        First name
-        <input
-          name="first_name"
-          value={values.first_name}
-          onChange={handleChange}
-          disabled={submitting}
-          aria-invalid={Boolean(fieldErrors.first_name)}
-          aria-describedby={fieldErrors.first_name ? "first_name-error" : undefined}
-        />
-        {fieldErrors.first_name && (
-          <span id="first_name-error" className="student-form__error">
-            {fieldErrors.first_name}
-          </span>
-        )}
-      </label>
+      <div className="student-form__row">
+        <label className="student-form__field">
+          First name
+          <input
+            name="first_name"
+            value={values.first_name}
+            onChange={handleChange}
+            disabled={submitting}
+            aria-invalid={Boolean(fieldErrors.first_name)}
+            aria-describedby={fieldErrors.first_name ? "first_name-error" : undefined}
+          />
+          {fieldErrors.first_name && (
+            <span id="first_name-error" className="student-form__error">
+              {fieldErrors.first_name}
+            </span>
+          )}
+        </label>
 
-      <label className="student-form__field">
-        Last name
-        <input
-          name="last_name"
-          value={values.last_name}
-          onChange={handleChange}
-          disabled={submitting}
-          aria-invalid={Boolean(fieldErrors.last_name)}
-          aria-describedby={fieldErrors.last_name ? "last_name-error" : undefined}
-        />
-        {fieldErrors.last_name && (
-          <span id="last_name-error" className="student-form__error">
-            {fieldErrors.last_name}
-          </span>
-        )}
-      </label>
+        <label className="student-form__field">
+          Last name
+          <input
+            name="last_name"
+            value={values.last_name}
+            onChange={handleChange}
+            disabled={submitting}
+            aria-invalid={Boolean(fieldErrors.last_name)}
+            aria-describedby={fieldErrors.last_name ? "last_name-error" : undefined}
+          />
+          {fieldErrors.last_name && (
+            <span id="last_name-error" className="student-form__error">
+              {fieldErrors.last_name}
+            </span>
+          )}
+        </label>
+      </div>
 
       <label className="student-form__field">
         Email
@@ -241,7 +246,8 @@ export default function StudentForm({ initialData, onSubmit, onCancel }) {
         <button type="button" onClick={onCancel} disabled={submitting}>
           Cancel
         </button>
-        <button type="submit" disabled={submitting}>
+        <button type="submit" className="student-form__submit" disabled={submitting}>
+          {submitting && <span className="student-form__spinner" aria-hidden="true" />}
           {submitting ? "Saving..." : isEdit ? "Save changes" : "Create student"}
         </button>
       </div>

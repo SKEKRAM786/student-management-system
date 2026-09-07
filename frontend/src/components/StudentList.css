@@ -1,8 +1,10 @@
 .student-list {
-  box-sizing: border-box;
   width: 100%;
-  padding: 32px 24px 48px;
-  text-align: left;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
 }
 
 .student-list__header {
@@ -11,91 +13,130 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
-.student-list__title {
+.student-list__header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.student-list__meta {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.student-list__controls {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 16px;
-}
-
-.student-list__header h1 {
-  margin: 0;
-  font-size: 36px;
+  align-items: flex-end;
+  gap: 12px;
 }
 
 .student-list__filter {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
-  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
 }
 
-.student-list__filter select,
+.student-list select,
 .student-list button {
-  font: inherit;
   color: var(--text-h);
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px 12px;
+  border-radius: 10px;
+  padding: 10px 14px;
   cursor: pointer;
 }
 
-.student-list__filter select {
-  min-width: 180px;
+.student-list select {
+  min-width: 170px;
+}
+
+.student-list__add {
+  color: #fff !important;
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.student-list__add:hover {
+  background: var(--accent-hover) !important;
 }
 
 .student-list button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-.student-list__status,
-.student-list__error {
-  margin: 24px 0;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--social-bg);
+.student-list__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 220px;
+  padding: 32px 16px;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  text-align: center;
+  background: var(--surface-muted);
 }
 
 .student-list__error {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  color: var(--danger);
+  border-style: solid;
+  background: var(--danger-bg);
+}
+
+.student-list__empty h3 {
+  margin: 0;
   color: var(--text-h);
+}
+
+.student-list__spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 .student-list__table-wrap {
   overflow-x: auto;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 14px;
 }
 
 .student-list__table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .student-list__table th,
 .student-list__table td {
-  padding: 12px 14px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border);
   text-align: left;
   white-space: nowrap;
 }
 
 .student-list__table th {
-  color: var(--text-h);
-  font-weight: 600;
-  background: var(--code-bg);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--surface-muted);
+}
+
+.student-list__table tbody tr:hover {
+  background: var(--surface-muted);
 }
 
 .student-list__table tbody tr:last-child td {
@@ -107,10 +148,59 @@
   gap: 8px;
 }
 
+.student-list__delete {
+  color: var(--danger) !important;
+  border-color: var(--danger-border) !important;
+  background: var(--danger-bg) !important;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-badge--active {
+  color: var(--success);
+  background: var(--success-bg);
+}
+
+.status-badge--graduated {
+  color: var(--graduated);
+  background: var(--graduated-bg);
+}
+
+.status-badge--dropped {
+  color: var(--dropped);
+  background: var(--dropped-bg);
+}
+
 .student-list__pagination {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 20px;
+  margin-top: 18px;
+  color: var(--muted);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 700px) {
+  .student-list {
+    padding: 16px;
+  }
+
+  .student-list__controls,
+  .student-list select,
+  .student-list__add {
+    width: 100%;
+  }
 }

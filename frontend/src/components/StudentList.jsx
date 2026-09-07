@@ -11,6 +11,13 @@ const EMPTY_PAGINATION = {
   total_pages: 0,
 };
 
+function statusLabel(status) {
+  if (!status) {
+    return "";
+  }
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
 export default function StudentList({ onEdit, onDelete, onAdd, refreshKey = 0 }) {
   const [students, setStudents] = useState([]);
   const [pagination, setPagination] = useState(EMPTY_PAGINATION);
@@ -72,33 +79,39 @@ export default function StudentList({ onEdit, onDelete, onAdd, refreshKey = 0 })
   return (
     <section className="student-list">
       <header className="student-list__header">
-        <div className="student-list__title">
-          <h1>Students</h1>
+        <div>
+          <h2>Directory</h2>
+          <p className="student-list__meta">
+            {loading ? "Loading records..." : `${pagination.total} student${pagination.total === 1 ? "" : "s"}`}
+          </p>
+        </div>
+        <div className="student-list__controls">
+          <label className="student-list__filter">
+            Status
+            <select value={status} onChange={handleStatusChange}>
+              <option value="">All</option>
+              <option value="active">Active</option>
+              <option value="graduated">Graduated</option>
+              <option value="dropped">Dropped</option>
+            </select>
+          </label>
           {onAdd && (
-            <button type="button" onClick={onAdd}>
+            <button type="button" className="student-list__add" onClick={onAdd}>
               Add Student
             </button>
           )}
         </div>
-        <label className="student-list__filter">
-          Enrollment status
-          <select value={status} onChange={handleStatusChange}>
-            <option value="">All</option>
-            <option value="active">active</option>
-            <option value="graduated">graduated</option>
-            <option value="dropped">dropped</option>
-          </select>
-        </label>
       </header>
 
       {loading && (
-        <p className="student-list__status" aria-live="polite">
+        <div className="student-list__panel student-list__status" aria-live="polite">
+          <span className="student-list__spinner" aria-hidden="true" />
           Loading students...
-        </p>
+        </div>
       )}
 
       {error && !loading && (
-        <div className="student-list__error" role="alert">
+        <div className="student-list__panel student-list__error" role="alert">
           <p>{error}</p>
           <button type="button" onClick={() => setRefreshIndex((value) => value + 1)}>
             Retry
@@ -107,7 +120,19 @@ export default function StudentList({ onEdit, onDelete, onAdd, refreshKey = 0 })
       )}
 
       {!loading && !error && students.length === 0 && (
-        <p className="student-list__status">No students found</p>
+        <div className="student-list__panel student-list__empty">
+          <h3>No students found</h3>
+          <p>
+            {status
+              ? "No records match this enrollment status."
+              : "Add a student to get started."}
+          </p>
+          {!status && onAdd && (
+            <button type="button" className="student-list__add" onClick={onAdd}>
+              Add Student
+            </button>
+          )}
+        </div>
       )}
 
       {!loading && !error && students.length > 0 && (
@@ -131,12 +156,20 @@ export default function StudentList({ onEdit, onDelete, onAdd, refreshKey = 0 })
                     <td>{student.last_name}</td>
                     <td>{student.email}</td>
                     <td>{student.date_of_birth}</td>
-                    <td>{student.enrollment_status}</td>
+                    <td>
+                      <span className={`status-badge status-badge--${student.enrollment_status}`}>
+                        {statusLabel(student.enrollment_status)}
+                      </span>
+                    </td>
                     <td className="student-list__actions">
                       <button type="button" onClick={() => onEdit(student)}>
                         Edit
                       </button>
-                      <button type="button" onClick={() => onDelete(student.id)}>
+                      <button
+                        type="button"
+                        className="student-list__delete"
+                        onClick={() => onDelete(student.id)}
+                      >
                         Delete
                       </button>
                     </td>
