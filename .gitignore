@@ -216,3 +216,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project
+backend/students.db
+*.db
+backend/venv/
+frontend/node_modules/
