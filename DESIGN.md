@@ -33,6 +33,11 @@ REST resource: `/students`
 
 
 
+Key decisions:
 
+API layer is fully isolated in services/api.js. Components only ever call functions like getStudents(), createStudent() — never axios.get(...) directly. This was a hard requirement in the brief and keeps the components testable/swappable independent of the HTTP client.
+Form is "dumb" about persistence — StudentForm only validates and calls onSubmit(data); it doesn't know whether that's a create or an edit. App.jsx decides which API call to make based on whether editingStudent is set. This keeps the form reusable for both flows without branching logic inside it.
+List owns its own fetch state (loading/error/data) rather than lifting it all the way to App.jsx — since the list is the only thing that needs to react to page/filter changes, this avoids unnecessary re-renders and prop drilling.
+Errors are surfaced, not swallowed — every API call that can fail (create, update, delete, list fetch) has a corresponding UI state: a loading indicator, an inline form error, or a list-level error banner with retry. This was explicitly required and tested manually against a stopped backend to confirm nothing fails silently.
 
 
