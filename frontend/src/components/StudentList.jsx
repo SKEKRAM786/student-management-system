@@ -11,7 +11,7 @@ const EMPTY_PAGINATION = {
   total_pages: 0,
 };
 
-export default function StudentList({ onEdit, onDelete }) {
+export default function StudentList({ onEdit, onDelete, onAdd, refreshKey = 0 }) {
   const [students, setStudents] = useState([]);
   const [pagination, setPagination] = useState(EMPTY_PAGINATION);
   const [page, setPage] = useState(1);
@@ -58,7 +58,7 @@ export default function StudentList({ onEdit, onDelete }) {
     return () => {
       cancelled = true;
     };
-  }, [page, status, refreshIndex]);
+  }, [page, status, refreshIndex, refreshKey]);
 
   function handleStatusChange(event) {
     setStatus(event.target.value);
@@ -72,7 +72,14 @@ export default function StudentList({ onEdit, onDelete }) {
   return (
     <section className="student-list">
       <header className="student-list__header">
-        <h1>Students</h1>
+        <div className="student-list__title">
+          <h1>Students</h1>
+          {onAdd && (
+            <button type="button" onClick={onAdd}>
+              Add Student
+            </button>
+          )}
+        </div>
         <label className="student-list__filter">
           Enrollment status
           <select value={status} onChange={handleStatusChange}>
